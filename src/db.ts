@@ -1,23 +1,14 @@
-import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
-import http from "http";
+import mongoose from 'mongoose';
 
+const MONGODB_URI = `${process.env.MONGODB_URI}` || 'default_connection_string';
 
-const app = express();
+mongoose.connect(MONGODB_URI);
 
-app.use(cors({
-  origin: '*',
-}));
+const db = mongoose.connection;
 
-const PORT = 5000;
-
-
-app.use(express.json());
-
-// Create an HTTP server
-const server = http.createServer(app);
-
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} with SSL`);
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
 });
+
+export default mongoose;
