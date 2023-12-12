@@ -2,8 +2,8 @@
 import { Schema, model, Document, Types } from 'mongoose';
 import { ITeam } from './team.model';
 
-// Define the MatchPlayer schema
-interface IPlayer extends Document {
+// Define the Player schema
+export interface IPlayer extends Document {
   team: Types.ObjectId | ITeam; // Assuming team is a reference to the Team model
   name: string;
   squad_number: number;
@@ -41,6 +41,6 @@ const MatchSchema = new Schema<IPlayer>({
   },
 });
 
-// Create and export the MatchPlayer model
-const MatchPlayer = model<IPlayer>('MatchPlayer', MatchSchema);
-export default MatchPlayer;
+// Create and export the Player model
+const Player = model<IPlayer>('Player', MatchSchema);
+export default Player;

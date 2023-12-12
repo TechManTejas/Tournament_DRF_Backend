@@ -2,23 +2,22 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import mongoose from './db';
-import fs from 'fs';
-import https from "https"
 import http from "http";
 
 // Routes 
-// import userRoutes from './routes/userRoutes.routes';
-// import contactUsResponsesRoutes from './routes/contactUsResponses.routes';
-// import taxiFormRoutes from './routes/taxiForm.routes'; 
-// import faqRoutes from './routes/faq.routes';
-// import cityRoutes from './routes/city.routes';
-// import couponRoutes from './routes/coupon.routes';
-// import routeRoutes from './routes/route.routes';
-// import taxiTypeRoutes from './routes/taxiType.routes';
-// import taxiRoutes from './routes/taxi.routes';
-// import driverRoutes from './routes/driver.routes';
-// import bookingRoutes from './routes/bookings.routes'
-// import settingsRoutes from './routes/settings.routes';
+import userRoutes from './routes/user.routes';
+import cardRouter from './routes/card.routes';
+import clubRouter from './routes/club.routes';
+import commentRouter from './routes/comment.routes';
+import goalRouter from './routes/goal.routes';
+import matchRouter from './routes/match.routes';
+import mediaRouter from './routes/media.routes';
+import playerRouter from './routes/player.routes';
+import refereeRouter from './routes/referee.routes';
+import stadiumRouter from './routes/stadium.routes';
+import substituteRouter from './routes/substitute.routes';
+import teamRouter from './routes/team.routes';
+import tournamentRouter from './routes/tournament.routes';
 
 const app = express();
 
@@ -31,43 +30,19 @@ const PORT = process.env.PORT || 5000;
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(express.json());
-// app.use('/users', userRoutes);
-// app.use('/contact-us', contactUsResponsesRoutes);
-// app.use('/taxi-forms', taxiFormRoutes);
-// app.use('/faqs', faqRoutes);
-// app.use('/citys', cityRoutes);
-// app.use('/coupons', couponRoutes);
-// app.use('/routes', routeRoutes);
-// app.use('/taxitypes', taxiTypeRoutes);
-// app.use('/taxis', taxiRoutes); 
-// app.use('/drivers', driverRoutes); 
-// app.use('/bookings', bookingRoutes);
-// app.use('/settings', settingsRoutes);
-
-// app.get('/.well-known/pki-validation/39DDA8E16A8150424FC88AD44C09AED0.txt', (req, res) => {
-//   // Assuming your text file is named 'example.txt' in the root directory
-//   const filePath = '39DDA8E16A8150424FC88AD44C09AED0.txt';
-
-//   fs.readFile(filePath, 'utf8', (err, data) => {
-//     if (err) {
-//       console.error(err);
-//       res.status(500).send('Internal Server Error');
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// });
-
-// Specify the paths to your SSL certificate and private key
-// const privateKey = fs.readFileSync('private.key', 'utf8');
-// const certificate = fs.readFileSync('certificate.crt', 'utf8');
-// const ca = fs.readFileSync('ca_bundle.crt', 'utf8');
-
-// const credentials = { key: privateKey, cert: certificate, ca: ca };
-
-// Create an HTTPS server
-// const server = https.createServer(credentials, app);
-
+app.use('/card', cardRouter);
+app.use('/club', clubRouter);
+app.use('/comment', commentRouter);
+app.use('/goal', goalRouter);
+app.use('/match', matchRouter);
+app.use('/media', mediaRouter);
+app.use('/player', playerRouter);
+app.use('/referee', refereeRouter);
+app.use('/stadium', stadiumRouter);
+app.use('/substitute', substituteRouter);
+app.use('/team', teamRouter);
+app.use('/tournament', tournamentRouter);
+app.use('/user', userRoutes);
 
 // Create an HTTPS server
 const server = http.createServer(app);

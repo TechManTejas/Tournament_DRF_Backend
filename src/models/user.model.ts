@@ -7,7 +7,7 @@ interface IUser extends Document {
   club: Types.ObjectId | IClub; // Assuming club is a reference to the Club model
   firstname: string;
   lastname: string;
-  mail: string; // No further extension
+  email: string; // No further extension
   role: string;
 }
 
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
-  mail: {
+  email: {
     type: String,
     required: true,
   },

@@ -3,7 +3,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 import { ITournament } from './tournament.model';
 
 // Define the Referee schema
-interface IReferee extends Document {
+export interface IReferee extends Document {
   tournament: Types.ObjectId | ITournament; // Assuming tournament is a reference to the Tournament model
   name: string;
 }

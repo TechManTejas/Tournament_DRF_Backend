@@ -2,7 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import { Document, Model, PopulateOptions, Query } from 'mongoose';
 
 // Generic function to generate CRUD routes for a model
-export const generateCRUDRoutes = <T extends Document>(
+export const jsonCRUD = <T extends Document>(
   model: Model<T>, 
   population?: PopulateOptions[]
 ): Router => {
