@@ -20,6 +20,7 @@ from match import views as match_comment_views  # Add this line
 
 router = DefaultRouter()
 router.register('user', user_views.UserModelViewSet, basename='user')
+router.register('user-lobby', user_views.UserLobbyModelViewSet, basename='user-lobby')
 router.register('media', media_views.MediaViewSet, basename='media')
 router.register('club', club_views.ClubViewSet, basename='club')
 router.register('stadium', stadium_views.StadiumViewSet, basename='stadium')
