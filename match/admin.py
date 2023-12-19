@@ -1,3 +1,32 @@
 from django.contrib import admin
+from .models import Match, MatchCardRecord, MatchComment, MatchGoalRecord, MatchSubstituteRecord
 
-# Register your models here.
+@admin.register(Match)
+class MatchAdmin(admin.ModelAdmin):
+    list_display = ('teamA', 'teamB', 'tournament', 'datetime', 'status')
+    list_filter = ('tournament', 'status')
+    search_fields = ('teamA__name', 'teamB__name', 'tournament__name', 'datetime')
+
+@admin.register(MatchSubstituteRecord)
+class MatchSubstituteRecordAdmin(admin.ModelAdmin):
+    list_display = ('match', 'player_in', 'player_out', 'minute', 'created_at')
+    list_filter = ('match', 'player_in', 'player_out', 'created_at')
+    search_fields = ('match__teamA__name', 'match__teamB__name', 'player_in__name', 'player_out__name')
+
+@admin.register(MatchCardRecord)
+class MatchCardRecordAdmin(admin.ModelAdmin):
+    list_display = ('match', 'player', 'card_type', 'penalty_time', 'minute', 'created_at')
+    list_filter = ('match', 'player', 'card_type', 'created_at')
+    search_fields = ('match__teamA__name', 'match__teamB__name', 'player__name')
+
+@admin.register(MatchGoalRecord)
+class MatchGoalRecordAdmin(admin.ModelAdmin):
+    list_display = ('match', 'player', 'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
+    list_filter = ('match', 'player', 'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
+    search_fields = ('match__teamA__name', 'match__teamB__name', 'player__name')
+
+@admin.register(MatchComment)
+class MatchCommentAdmin(admin.ModelAdmin):
+    list_display = ('match', 'comment_minute', 'comment', 'type', 'created_at')
+    list_filter = ('match', 'comment_minute', 'type', 'created_at')
+    search_fields = ('match__teamA__name', 'match__teamB__name', 'comment')

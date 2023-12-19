@@ -1,3 +1,19 @@
 from django.db import models
+from team.models import Team
+from media.models import Media
 
-# Create your models here.
+class Player(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    image = models.ForeignKey(Media, on_delete=models.CASCADE)
+    squad_number = models.PositiveIntegerField()
+    display_order = models.PositiveIntegerField()
+    
+    STATUS_CHOICES = [
+        ('First Eleven', 'First Eleven'),
+        ('Substitute', 'Substitute'),
+    ]
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return self.name

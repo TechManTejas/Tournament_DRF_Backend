@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from .models import User
 from .serializers import UserSerializer
 
 

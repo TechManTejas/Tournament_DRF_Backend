@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Tournament
 
-# Register your models here.
+@admin.register(Tournament)
+class TournamentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'club', 'start_date', 'start_time')

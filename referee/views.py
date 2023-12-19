@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Referee
+from .serializers import RefereeSerializer
 
-# Create your views here.
+class RefereeViewSet(viewsets.ModelViewSet):
+    queryset = Referee.objects.all()
+    serializer_class = RefereeSerializer
