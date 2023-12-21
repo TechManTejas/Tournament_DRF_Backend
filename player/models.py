@@ -3,9 +3,9 @@ from team.models import Team
 from media.models import Media
 
 class Player(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=255)
-    image = models.ForeignKey(Media, on_delete=models.CASCADE)
+    image = models.ForeignKey(Media, on_delete=models.SET_NULL, null=True)
     squad_number = models.PositiveIntegerField()
     display_order = models.PositiveIntegerField()
     
