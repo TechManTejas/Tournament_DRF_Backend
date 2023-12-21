@@ -17,10 +17,8 @@ class UserPagination(PageNumberPagination):
 class UserModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['^username'] 
-    pagination_class = UserPagination
-    authentication_classes = [AllowAny]
+    permission_classes = [AllowAny]
+    authentication_classes = []
     
     def create(self, request):
         serializer = UserSerializer(data=request.data)
@@ -28,9 +26,6 @@ class UserModelViewSet(viewsets.ModelViewSet):
         user = User.objects.create_user(**serializer.validated_data)
         token = Token.objects.create(user=user)
         return Response({'token': token.key, 'user': str(token.user)})
-    
-    def perform_create(self, serializer):
-        serializer.save(club=self.request.user.club)
 
 class UserLobbyModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -38,7 +33,7 @@ class UserLobbyModelViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ['^username'] 
     pagination_class = UserPagination
-    http_method_names = ['get','patch']
+    http_method_names = ['get','patch', 'delete']
 
     def get_queryset(self):
         user_club = self.request.user.club

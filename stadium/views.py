@@ -18,11 +18,10 @@ class StadiumViewSet(viewsets.ModelViewSet):
     pagination_class = StadiumPagination
 
     def get_serializer_class(self):
-        # Choose serializer based on the request method
         if self.request.method == "GET":
             return StadiumReadSerializer
         elif self.request.method in ["POST", "PUT", "PATCH"]:
             return StadiumWriteSerializer
 
     def perform_create(self, serializer):
-        serializer.save(club=self.request.user.club.id)
+        serializer.save(club=self.request.user.club)
