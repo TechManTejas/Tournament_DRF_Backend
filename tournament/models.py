@@ -1,12 +1,11 @@
 from django.db import models
 from club.models import Club
-from media.models import Media
 
 class Tournament(models.Model):
+    logo = models.ImageField(upload_to='tournament_logos/')
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     alias = models.CharField(max_length=50)
-    logo = models.ForeignKey(Media, on_delete=models.CASCADE)
     points_draw = models.PositiveIntegerField()
     start_time = models.TimeField()
     start_date = models.DateField()

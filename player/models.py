@@ -1,14 +1,13 @@
 from django.db import models
 from team.models import Team
-from media.models import Media
 
 class Player(models.Model):
+    image = models.ImageField(upload_to='player_images/')
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=255)
-    image = models.ForeignKey(Media, on_delete=models.SET_NULL, null=True)
     squad_number = models.PositiveIntegerField()
     display_order = models.PositiveIntegerField()
-    
+
     STATUS_CHOICES = [
         ('First Eleven', 'First Eleven'),
         ('Substitute', 'Substitute'),

@@ -5,7 +5,6 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 
 from user import views as user_views
-from media import views as media_views
 from club import views as club_views
 from stadium import views as stadium_views
 from team import views as team_views
@@ -16,12 +15,11 @@ from match import views as match_views
 from match import views as match_substitute_record_views
 from match import views as match_card_record_views
 from match import views as match_goal_record_views
-from match import views as match_comment_views  # Add this line
+from match import views as match_comment_views  
 
 router = DefaultRouter()
 router.register('user', user_views.UserModelViewSet, basename='user')
 router.register('user-lobby', user_views.UserLobbyModelViewSet, basename='user-lobby')
-router.register('media', media_views.MediaViewSet, basename='media')
 router.register('club', club_views.ClubViewSet, basename='club')
 router.register('stadium', stadium_views.StadiumViewSet, basename='stadium')
 router.register('team', team_views.TeamViewSet, basename='team')
