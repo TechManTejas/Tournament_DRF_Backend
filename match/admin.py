@@ -9,20 +9,20 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(MatchSubstituteRecord)
 class MatchSubstituteRecordAdmin(admin.ModelAdmin):
-    list_display = ('match', 'player_in', 'player_out', 'minute', 'created_at')
-    list_filter = ('match', 'player_in', 'player_out', 'created_at')
+    list_display = ('match',  'minute', 'created_at')
+    list_filter = ('match', 'created_at')
     search_fields = ('match__teamA__name', 'match__teamB__name', 'player_in__name', 'player_out__name')
 
 @admin.register(MatchCardRecord)
 class MatchCardRecordAdmin(admin.ModelAdmin):
-    list_display = ('match', 'player', 'card_type', 'penalty_time', 'minute', 'created_at')
-    list_filter = ('match', 'player', 'card_type', 'created_at')
+    list_display = ('match', 'card_type', 'penalty_time', 'minute', 'created_at')
+    list_filter = ('match',  'card_type', 'created_at')
     search_fields = ('match__teamA__name', 'match__teamB__name', 'player__name')
 
 @admin.register(MatchGoalRecord)
 class MatchGoalRecordAdmin(admin.ModelAdmin):
-    list_display = ('match', 'player', 'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
-    list_filter = ('match', 'player', 'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
+    list_display = ('match',  'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
+    list_filter = ('match',  'goal_minute', 'is_penalty_goal', 'is_own_goal', 'created_at')
     search_fields = ('match__teamA__name', 'match__teamB__name', 'player__name')
 
 @admin.register(MatchComment)

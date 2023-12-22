@@ -1,4 +1,5 @@
 from django.db import models
+from club.models import Club
 from team.models import Team
 from tournament.models import Tournament
 from referee.models import Referee
@@ -7,6 +8,7 @@ from player.models import Player
 from django.utils import timezone
 
 class Match(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     teamA = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamA_matches')
     teamB = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamB_matches')
     jersey_color_A = models.CharField(max_length=50)
@@ -34,6 +36,7 @@ class Match(models.Model):
         return f"{self.teamA} vs {self.teamB} - {self.tournament}"
 
 class MatchSubstituteRecord(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player_in = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='substitute_records_in')
     player_out = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='substitute_records_out')
@@ -44,6 +47,7 @@ class MatchSubstituteRecord(models.Model):
         return f"{self.match} - {self.player_in} in, {self.player_out} out at {self.minute} minutes"
     
 class MatchCardRecord(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='card_records')
     
@@ -62,6 +66,7 @@ class MatchCardRecord(models.Model):
         return f"{self.match} - {self.player} - {self.card_type} card at {self.minute} minutes"
     
 class MatchGoalRecord(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='goal_records')
     goal_minute = models.PositiveIntegerField()
@@ -73,6 +78,7 @@ class MatchGoalRecord(models.Model):
         return f"{self.match} - {self.player} - Goal at {self.goal_minute} minutes"
     
 class MatchComment(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     comment_minute = models.PositiveIntegerField()
     comment = models.TextField()

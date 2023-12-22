@@ -33,6 +33,10 @@ class UserModelViewSet(viewsets.ModelViewSet):
         )
         Token.objects.create(user=user)
 
+class UserLobbyModelViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 class UserRegisterModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

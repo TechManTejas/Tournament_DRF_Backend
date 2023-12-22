@@ -2,6 +2,7 @@ from django.db import models
 from club.models import Club
 
 class Tournament(models.Model):
+    data = models.JSONField(default=dict)
     logo = models.ImageField(upload_to='tournament_logos/')
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
