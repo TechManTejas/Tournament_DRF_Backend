@@ -18,8 +18,8 @@ from match import views as match_goal_record_views
 from match import views as match_comment_views  
 
 router = DefaultRouter()
+router.register('user-register', user_views.UserRegisterModelViewSet, basename='user-register')
 router.register('user', user_views.UserModelViewSet, basename='user')
-router.register('user-lobby', user_views.UserLobbyModelViewSet, basename='user-lobby')
 router.register('club', club_views.ClubViewSet, basename='club')
 router.register('stadium', stadium_views.StadiumViewSet, basename='stadium')
 router.register('team', team_views.TeamViewSet, basename='team')
