@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'stadium',
     'team',
     'tournament',
-    'user'
+    'user',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tournament_drf_backend.wsgi.application'
 
+# Use channels layer as the default backend for Django
+ASGI_APPLICATION = 'tournament_drf_backend.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
