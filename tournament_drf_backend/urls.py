@@ -15,7 +15,8 @@ from match import views as match_views
 from match import views as match_substitute_record_views
 from match import views as match_card_record_views
 from match import views as match_goal_record_views
-from match import views as match_comment_views  
+from match import views as match_comment_views
+from news.views import NewsViewSet  # Import the News viewset
 
 router = DefaultRouter()
 router.register('user-register', user_views.UserRegisterModelViewSet, basename='user-register')
@@ -24,13 +25,14 @@ router.register('club', club_views.ClubViewSet, basename='club')
 router.register('stadium', stadium_views.StadiumViewSet, basename='stadium')
 router.register('team', team_views.TeamViewSet, basename='team')
 router.register('player', player_views.PlayerViewSet, basename='player')
-router.register('referee', referee_views.RefereeViewSet, basename='referee')
+router.register('referee', referee_views.RefereeModelViewSet, basename='referee')
 router.register('tournament', tournament_views.TournamentViewSet, basename='tournament')
 router.register('match', match_views.MatchViewSet, basename='match')
 router.register('matchsubstituterecord', match_substitute_record_views.MatchSubstituteRecordViewSet, basename='matchsubstituterecord')
 router.register('matchcardrecord', match_card_record_views.MatchCardRecordViewSet, basename='matchcardrecord')
 router.register('matchgoalrecord', match_goal_record_views.MatchGoalRecordViewSet, basename='matchgoalrecord')
-router.register('matchcomment', match_comment_views.MatchCommentViewSet, basename='matchcomment')  # Add this line
+router.register('matchcomment', match_comment_views.MatchCommentViewSet, basename='matchcomment')
+router.register('news', NewsViewSet, basename='news')  # Register the News viewset
 
 urlpatterns = [
     path('admin/', admin.site.urls),

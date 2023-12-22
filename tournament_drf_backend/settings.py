@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'club',
     'match',
+    'news',
     'player',
     'referee',
     'stadium',
