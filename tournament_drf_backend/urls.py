@@ -7,6 +7,8 @@ from rest_framework.routers import DefaultRouter
 from user import views as user_views
 from club import views as club_views
 from stadium import views as stadium_views
+from round import views as round_views
+from group import views as group_views
 from team import views as team_views
 from player import views as player_views
 from referee import views as referee_views
@@ -17,6 +19,7 @@ from match import views as match_substitute_record_views
 from match import views as match_card_record_views
 from match import views as match_goal_record_views
 from match import views as match_comment_views
+from chat.views import ChatSupportViewSet, ChatClubViewSet  # Add these lines
 
 router = DefaultRouter()
 router.register('user-register', user_views.UserRegisterModelViewSet, basename='user-register')
@@ -24,6 +27,8 @@ router.register('user-lobby', user_views.UserLobbyModelViewSet, basename='user-l
 router.register('user', user_views.UserModelViewSet, basename='user')
 router.register('club', club_views.ClubViewSet, basename='club')
 router.register('stadium', stadium_views.StadiumViewSet, basename='stadium')
+router.register('round', round_views.RoundViewSet, basename='round')
+router.register('group', group_views.GroupViewSet, basename='group')
 router.register('team', team_views.TeamViewSet, basename='team')
 router.register('player', player_views.PlayerModelViewSet, basename='player')
 router.register('referee', referee_views.RefereeModelViewSet, basename='referee')
@@ -33,7 +38,10 @@ router.register('matchsubstituterecord', match_substitute_record_views.MatchSubs
 router.register('matchcardrecord', match_card_record_views.MatchCardRecordViewSet, basename='matchcardrecord')
 router.register('matchgoalrecord', match_goal_record_views.MatchGoalRecordViewSet, basename='matchgoalrecord')
 router.register('matchcomment', match_comment_views.MatchCommentViewSet, basename='matchcomment')
-router.register('news', news_views.NewsViewSet, basename='news')  # Register the News viewset
+router.register('news', news_views.NewsViewSet, basename='news')  
+router.register('gamemode', tournament_views.GameModeViewSet, basename='gamemode')  
+router.register('chatsupport', ChatSupportViewSet, basename='chatsupport')  
+router.register('chatclub', ChatClubViewSet, basename='chatclub')  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
