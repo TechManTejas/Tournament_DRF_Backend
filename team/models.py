@@ -1,14 +1,16 @@
 from django.db import models
 from club.models import Club
 from player.models import Player
+from tournament.models import Tournament
 
 class TeamRecord(models.Model):
     club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
+    tournament = models.ForeignKey(Tournament, on_delete=models.SET_NULL, null=True)
+    verified = models.BooleanField(default=False)
+    
     logo = models.ImageField(upload_to='team_logos/')  
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=50)
-    category = models.CharField(max_length=50)
-    verified = models.BooleanField(default=False)
     
     # Foreign Keys to Player model for playing players
     playing_player_1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='playing_player_1')
@@ -29,11 +31,6 @@ class TeamRecord(models.Model):
     substitute_player_3 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='substitute_player_3')
     substitute_player_4 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='substitute_player_4')
     substitute_player_5 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='substitute_player_5')
-
-    # Additional attributes for TeamRecord model
-    points = models.PositiveIntegerField(default=0)
-    goals_pos = models.PositiveIntegerField(default=0)
-    goals_neg = models.PositiveIntegerField(default=0)
 
     # New boolean attribute
     save_team = models.BooleanField(default=False)

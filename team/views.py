@@ -9,12 +9,12 @@ class TeamPagination(PageNumberPagination):
     page_size_query_param = "page_size"
     max_page_size = 100
 
-class TeamViewSet(viewsets.ModelViewSet):
+class TeamRecordViewSet(viewsets.ModelViewSet):
     queryset = TeamRecord.objects.all()
     serializer_class = TeamRecordSerializer
     pagination_class = TeamPagination
     filter_backends = [SearchFilter]
-    search_fields = ["^name"]  # Add the fields you want to search for
+    search_fields = ["^name"]
 
     def get_queryset(self):
         requester_club = self.request.user.club

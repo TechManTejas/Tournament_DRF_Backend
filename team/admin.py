@@ -3,13 +3,13 @@ from .models import TeamRecord
 
 @admin.register(TeamRecord)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'club', 'short_name', 'category', 'verified', 'save_team')
-    list_filter = ('club', 'category', 'verified', 'save_team')
-    search_fields = ('name', 'short_name', 'category')
+    list_display = ('name', 'club', 'short_name', 'verified', 'save_team')
+    list_filter = ('club', 'verified', 'save_team')
+    search_fields = ('name', 'short_name')
 
     fieldsets = (
         ('General Information', {
-            'fields': ('name', 'club', 'short_name', 'category', 'verified')
+            'fields': ('name', 'club', 'logo', 'short_name', 'verified')
         }),
         ('Playing Players', {
             'fields': (
@@ -25,7 +25,7 @@ class TeamAdmin(admin.ModelAdmin):
             )
         }),
         ('Additional Attributes', {
-            'fields': ('points', 'goals_pos', 'goals_neg', 'save_team')
+            'fields': ('save_team',)
         }),
     )
 
