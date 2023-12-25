@@ -33,8 +33,6 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
             return TeamRecord.objects.filter(club=requester_club)
 
     def perform_create(self, serializer):
-        print(self.request.data)
-
         # Get or create the tournament instance
         tournament_id = self.request.data.get("tournament")
 
@@ -58,6 +56,51 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
         serializer.save(
             club=self.request.user.club,
             tournament=tournament_instance,
+            playing_player_1=playing_players_instances[0],
+            playing_player_2=playing_players_instances[1],
+            playing_player_3=playing_players_instances[2],
+            playing_player_4=playing_players_instances[3],
+            playing_player_5=playing_players_instances[4],
+            playing_player_6=playing_players_instances[5],
+            playing_player_7=playing_players_instances[6],
+            playing_player_8=playing_players_instances[7],
+            playing_player_9=playing_players_instances[8],
+            playing_player_10=playing_players_instances[9],
+            playing_player_11=playing_players_instances[10],
+            substitute_player_1=substitute_players_instances[0],
+            substitute_player_2=substitute_players_instances[1],
+            substitute_player_3=substitute_players_instances[2],
+            substitute_player_4=substitute_players_instances[3],
+            substitute_player_5=substitute_players_instances[4],
+        )
+
+    def perform_update(self, serializer):
+        # Update the tournament instance if the tournament_id is provided
+        tournament_id = self.request.data.get("tournament")
+        if tournament_id:
+            tournament_instance = Tournament.objects.get(id=int(tournament_id))
+            serializer.save(tournament=tournament_instance)
+        else:
+            serializer.save()
+
+        # Update playing players if provided in the request data
+        playing_players_ids = [
+            self.request.data.get(f"playing_player_{i}") for i in range(1, 12)
+        ]
+        playing_players_instances = [
+            Player.objects.get(id=int(player_id)) for player_id in playing_players_ids
+        ]
+
+        # Update substitute players if provided in the request data
+        substitute_players_ids = [
+            self.request.data.get(f"substitute_player_{i}") for i in range(1, 6)
+        ]
+        substitute_players_instances = [
+            Player.objects.get(id=int(player_id)) for player_id in substitute_players_ids
+        ]
+
+        # Update playing players and substitute players in the team record
+        serializer.save(
             playing_player_1=playing_players_instances[0],
             playing_player_2=playing_players_instances[1],
             playing_player_3=playing_players_instances[2],

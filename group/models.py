@@ -1,10 +1,12 @@
 from django.db import models
 from club.models import Club
 from team.models import TeamRecord
-from round.models import Round  
+from round.models import Round
+from tournament.models import Tournament  
 
 class Group(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     round = models.ForeignKey(Round, on_delete=models.CASCADE)
     team_records = models.ManyToManyField(TeamRecord, related_name='groups')
     name = models.CharField(max_length=255, unique=True)
