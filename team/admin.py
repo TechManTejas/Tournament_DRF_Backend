@@ -9,7 +9,7 @@ class TeamAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('General Information', {
-            'fields': ('name', 'club', 'logo', 'short_name', 'verified')
+            'fields': ('name', 'club', 'logo', 'short_name', 'verified', 'tournament')
         }),
         ('Playing Players', {
             'fields': (

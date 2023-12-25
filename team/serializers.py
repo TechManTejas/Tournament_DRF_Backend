@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from club.serializers import ClubSerializer
 from player.serializers import PlayerSerializer
+from tournament.serializers import TournamentSerializer
 from .models import TeamRecord
 
 class TeamRecordSerializer(serializers.ModelSerializer):
     club = ClubSerializer(read_only=True)
+    tournament = TournamentSerializer(read_only=True)
     playing_player_1 = PlayerSerializer(read_only=True)
     playing_player_2 = PlayerSerializer(read_only=True)
     playing_player_3 = PlayerSerializer(read_only=True)
