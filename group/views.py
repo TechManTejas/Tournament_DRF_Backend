@@ -53,13 +53,19 @@ class GroupViewSet(viewsets.ModelViewSet):
         # Retrieve the existing group instance
         instance = self.get_object()
 
+        # Clear existing team_records
         instance.team_records.clear()
 
         # Handle the many-to-many relationship for team_records
         team_records_data = self.request.data.get('team_records', [])
-        for team_record_id in json.loads(team_records_data):
-            # Assuming team_records is a ManyToManyField in the Group model
-            instance.team_records.add(team_record_id)
+        team_records_ids = json.loads(team_records_data)
+
+        # Assuming the order is sent as a list of dictionaries with 'id' and 'order' keys
+        for order, data in enumerate(team_records_ids):
+            team_record_id = data['id']
+
+            # Add team_record to the group with the specified order
+            instance.team_records.add(team_record_id, through_defaults={'order': order})
 
         # Update the other fields using the serializer
         serializer.save()
