@@ -4,12 +4,23 @@ from team.models import TeamRecord
 from round.models import Round
 from tournament.models import Tournament  
 
+class GroupTeam(models.Model):
+    team_record = models.ForeignKey(TeamRecord, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+    goals_pos = models.IntegerField(default=0)
+    goals_neg = models.IntegerField(default=0)
+    order = models.IntegerField()
+
+    def __str__(self):
+        return f"Points: {self.points}, Goals Pos: {self.goals_pos}, Goals Neg: {self.goals_neg}"
+
 class Group(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     round = models.ForeignKey(Round, on_delete=models.CASCADE)
-    team_records = models.ManyToManyField(TeamRecord, related_name='groups')
+    group_team_records = models.ManyToManyField(GroupTeam, related_name='groups')
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
+

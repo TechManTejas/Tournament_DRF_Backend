@@ -1,10 +1,18 @@
 import json
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from round.models import Round
-
+from team.models import TeamRecord
+from django.db import transaction
 from tournament.models import Tournament
-from .models import Group
-from .serializers import GroupSerializer
+from .models import Group, GroupTeam
+from .serializers import GroupSerializer, GroupTeamSerializer
+
+
+class GroupTeamViewSet(viewsets.ModelViewSet):
+    queryset = GroupTeam.objects.all()
+    serializer_class = GroupTeamSerializer
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -24,48 +32,40 @@ class GroupViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(round__id=round_id)
 
         return queryset
-        
-    def perform_create(self, serializer):
-        requester_club = self.request.user.club
-        tournament_id = self.request.data.get('tournament_id')
-        round_id = self.request.data.get('round_id')
+
+    def create(self, request, *args, **kwargs):
+        requester_club = request.user.club
+        tournament_id = request.data.get("tournament_id")
+        round_id = request.data.get("round_id")
 
         tournament = Tournament.objects.get(id=tournament_id)
         round_instance = Round.objects.get(id=round_id)
-
-        # Save the group instance without the team_records field first
-        group_instance = serializer.save(
-            club=requester_club, 
-            tournament=tournament, 
-            round=round_instance,
-        )
+        group_team_records = []
 
         # Handle the many-to-many relationship for team_records
-        team_records_data = self.request.data.get('team_records', [])
-        for team_record_id in json.loads(team_records_data):
-            # Assuming team_records is a ManyToManyField in the Group model
-            group_instance.team_records.add(team_record_id)
+        group_team_records_data = request.data.get("group_team_records", [])
+        group_team_record_orders_ids = json.loads(group_team_records_data)
 
-        # Finally, save the group_instance with the updated team_records
-        group_instance.save()
+        for team_obj in group_team_record_orders_ids:
+            team_record_instance = TeamRecord.objects.get(id=team_obj['id'])
 
-    def perform_update(self, serializer):
-        # Retrieve the existing group instance
-        instance = self.get_object()
+            # Create GroupTeam instance with the order attribute
+            group_team_instance = GroupTeam.objects.create(
+                team_record=team_record_instance,
+                order=team_obj['order'],
+            )
+            group_team_records.append(group_team_instance.id)
 
-        # Clear existing team_records
-        instance.team_records.clear()
+        # Create Group object at the last
+        with transaction.atomic():
+            group_instance = Group.objects.create(
+                club=requester_club,
+                tournament=tournament,
+                round=round_instance,
+                name=request.data.get("name"),  # Add the field name as per your serializer
+            )
 
-        # Handle the many-to-many relationship for team_records
-        team_records_data = self.request.data.get('team_records', [])
-        team_records_ids = json.loads(team_records_data)
+            # Set the many-to-many relationship for team_records
+            group_instance.group_team_records.set(group_team_records)
 
-        # Assuming the order is sent as a list of dictionaries with 'id' and 'order' keys
-        for order, data in enumerate(team_records_ids):
-            team_record_id = data['id']
-
-            # Add team_record to the group with the specified order
-            instance.team_records.add(team_record_id, through_defaults={'order': order})
-
-        # Update the other fields using the serializer
-        serializer.save()
+        return Response({"status": "Group created successfully"}, status=status.HTTP_201_CREATED)
