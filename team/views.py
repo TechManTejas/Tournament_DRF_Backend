@@ -39,14 +39,19 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
         tournament_instance = Tournament.objects.get(id=int(tournament_id))
 
         playing_players_ids = [
-            self.request.data.get(f"playing_player_{i}") for i in range(1, 12)
+            self.request.data.get(f"playing_player_{i}") 
+            for i in range(1, 12)
+            if self.request.data.get(f"playing_player_{i}") is not None and self.request.data.get(f"playing_player_{i}") != 'undefined'
         ]
+
         playing_players_instances = [
             Player.objects.get(id=int(player_id)) for player_id in playing_players_ids
         ]
 
         substitute_players_ids = [
-            self.request.data.get(f"substitute_player_{i}") for i in range(1, 6)
+            self.request.data.get(f"substitute_player_{i}") 
+            for i in range(1, 6)
+            if self.request.data.get(f"substitute_player_{i}") is not None and self.request.data.get(f"substitute_player_{i}") != 'undefined'
         ]
         substitute_players_instances = [
             Player.objects.get(id=int(player_id)) for player_id in substitute_players_ids
@@ -57,21 +62,21 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
             club=self.request.user.club,
             tournament=tournament_instance,
             playing_player_1=playing_players_instances[0],
-            playing_player_2=playing_players_instances[1],
-            playing_player_3=playing_players_instances[2],
-            playing_player_4=playing_players_instances[3],
-            playing_player_5=playing_players_instances[4],
-            playing_player_6=playing_players_instances[5],
-            playing_player_7=playing_players_instances[6],
-            playing_player_8=playing_players_instances[7],
-            playing_player_9=playing_players_instances[8],
-            playing_player_10=playing_players_instances[9],
-            playing_player_11=playing_players_instances[10],
-            substitute_player_1=substitute_players_instances[0],
-            substitute_player_2=substitute_players_instances[1],
-            substitute_player_3=substitute_players_instances[2],
-            substitute_player_4=substitute_players_instances[3],
-            substitute_player_5=substitute_players_instances[4],
+            playing_player_2=playing_players_instances[1] if len(playing_players_instances) > 1 else None,
+            playing_player_3=playing_players_instances[2] if len(playing_players_instances) > 2 else None,
+            playing_player_4=playing_players_instances[3] if len(playing_players_instances) > 3 else None,
+            playing_player_5=playing_players_instances[4] if len(playing_players_instances) > 4 else None,
+            playing_player_6=playing_players_instances[5] if len(playing_players_instances) > 5 else None,
+            playing_player_7=playing_players_instances[6] if len(playing_players_instances) > 6 else None,
+            playing_player_8=playing_players_instances[7] if len(playing_players_instances) > 7 else None,
+            playing_player_9=playing_players_instances[8] if len(playing_players_instances) > 8 else None,
+            playing_player_10=playing_players_instances[9] if len(playing_players_instances) > 9 else None,
+            playing_player_11=playing_players_instances[10] if len(playing_players_instances) > 10 else None,
+            substitute_player_1=substitute_players_instances[0] if len(substitute_players_instances) > 0 else None,
+            substitute_player_2=substitute_players_instances[1] if len(substitute_players_instances) > 1 else None,
+            substitute_player_3=substitute_players_instances[2] if len(substitute_players_instances) > 2 else None,
+            substitute_player_4=substitute_players_instances[3] if len(substitute_players_instances) > 3 else None,
+            substitute_player_5=substitute_players_instances[4] if len(substitute_players_instances) > 4 else None,
         )
 
     def perform_update(self, serializer):
@@ -85,7 +90,9 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
 
         # Update playing players if provided in the request data
         playing_players_ids = [
-            self.request.data.get(f"playing_player_{i}") for i in range(1, 12)
+            self.request.data.get(f"playing_player_{i}") 
+            for i in range(1, 12)
+            if self.request.data.get(f"playing_player_{i}") is not None and self.request.data.get(f"playing_player_{i}") != 'undefined'
         ]
         playing_players_instances = [
             Player.objects.get(id=int(player_id)) for player_id in playing_players_ids
@@ -93,7 +100,9 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
 
         # Update substitute players if provided in the request data
         substitute_players_ids = [
-            self.request.data.get(f"substitute_player_{i}") for i in range(1, 6)
+            self.request.data.get(f"substitute_player_{i}") 
+            for i in range(1, 6)
+            if self.request.data.get(f"substitute_player_{i}") is not None and self.request.data.get(f"substitute_player_{i}") != 'undefined'
         ]
         substitute_players_instances = [
             Player.objects.get(id=int(player_id)) for player_id in substitute_players_ids
@@ -101,20 +110,22 @@ class TeamRecordViewSet(viewsets.ModelViewSet):
 
         # Update playing players and substitute players in the team record
         serializer.save(
+            club=self.request.user.club,
+            tournament=tournament_instance,
             playing_player_1=playing_players_instances[0],
-            playing_player_2=playing_players_instances[1],
-            playing_player_3=playing_players_instances[2],
-            playing_player_4=playing_players_instances[3],
-            playing_player_5=playing_players_instances[4],
-            playing_player_6=playing_players_instances[5],
-            playing_player_7=playing_players_instances[6],
-            playing_player_8=playing_players_instances[7],
-            playing_player_9=playing_players_instances[8],
-            playing_player_10=playing_players_instances[9],
-            playing_player_11=playing_players_instances[10],
-            substitute_player_1=substitute_players_instances[0],
-            substitute_player_2=substitute_players_instances[1],
-            substitute_player_3=substitute_players_instances[2],
-            substitute_player_4=substitute_players_instances[3],
-            substitute_player_5=substitute_players_instances[4],
+            playing_player_2=playing_players_instances[1] if len(playing_players_instances) > 1 else None,
+            playing_player_3=playing_players_instances[2] if len(playing_players_instances) > 2 else None,
+            playing_player_4=playing_players_instances[3] if len(playing_players_instances) > 3 else None,
+            playing_player_5=playing_players_instances[4] if len(playing_players_instances) > 4 else None,
+            playing_player_6=playing_players_instances[5] if len(playing_players_instances) > 5 else None,
+            playing_player_7=playing_players_instances[6] if len(playing_players_instances) > 6 else None,
+            playing_player_8=playing_players_instances[7] if len(playing_players_instances) > 7 else None,
+            playing_player_9=playing_players_instances[8] if len(playing_players_instances) > 8 else None,
+            playing_player_10=playing_players_instances[9] if len(playing_players_instances) > 9 else None,
+            playing_player_11=playing_players_instances[10] if len(playing_players_instances) > 10 else None,
+            substitute_player_1=substitute_players_instances[0] if len(substitute_players_instances) > 0 else None,
+            substitute_player_2=substitute_players_instances[1] if len(substitute_players_instances) > 1 else None,
+            substitute_player_3=substitute_players_instances[2] if len(substitute_players_instances) > 2 else None,
+            substitute_player_4=substitute_players_instances[3] if len(substitute_players_instances) > 3 else None,
+            substitute_player_5=substitute_players_instances[4] if len(substitute_players_instances) > 4 else None,
         )
