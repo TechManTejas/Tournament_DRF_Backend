@@ -5,6 +5,7 @@ class GameMode(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='game_mode_images/')
     description = models.TextField()
+    data = models.JSONField(default=dict)
 
     def __str__(self):
         return self.name
