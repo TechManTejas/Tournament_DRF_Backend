@@ -6,9 +6,9 @@ class Round(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    no_of_groups = models.IntegerField() 
     schedule = models.JSONField(default=list)  
     result = models.JSONField(default=list)
+    no_of_groups = models.IntegerField() 
 
     def __str__(self):
         return f"{self.tournament.name} - Round {self.name} ({self.club.name})"

@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from group.models import Group
+from group.models import Group, GroupTeam
 
 from round.models import Round
 from .models import GameMode, Tournament
@@ -51,12 +51,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
         for round_data in game_mode_data:
             groups_data = round_data.get("groups", [])
 
+            # Calculate the number of teams in the first group
+            num_teams_in_first_group = len(groups_data[0]["teams"])
+
             # Explicitly pass tournament_id and club_id when creating Round
             round_obj = Round.objects.create(
                 tournament=tournament,
                 club=tournament.club,
                 name=round_data["name"],
-                no_of_groups=len(groups_data)
+                no_of_groups=num_teams_in_first_group  # Set no_of_groups as the number of teams in the first group
             )
 
             # Create Groups
@@ -67,3 +70,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
                     club=tournament.club,
                     name=group_data["name"]
                 )
+
+                for team_data in group_data["teams"]:
+                    group_team = GroupTeam.objects.create()
+                    group_obj.group_team_records.add(group_team)
