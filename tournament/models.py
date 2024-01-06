@@ -3,7 +3,6 @@ from club.models import Club
 
 class GameMode(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='game_mode_images/')
     description = models.TextField()
     data = models.JSONField(default=dict)
 

@@ -5,6 +5,7 @@ from .models import GameMode
 
 
 class GameModeSerializer(serializers.ModelSerializer):
+    data = serializers.JSONField()
     class Meta:
         model = GameMode
         fields = "__all__"
