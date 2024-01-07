@@ -52,14 +52,7 @@ class Match(models.Model):
     timer = models.CharField(max_length=4, blank=True)
     end_time = models.TimeField(null=True, blank=True)
 
-    STATUS_CHOICES = [
-        ("scheduled", "Scheduled"),
-        ("in_progress", "In Progress"),
-        ("completed", "Completed"),
-    ]
-    status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="scheduled", blank=True
-    )
+    status = models.CharField(max_length=255, default="scheduled", blank=True)
 
     id = models.CharField(primary_key=True, max_length=255)
 

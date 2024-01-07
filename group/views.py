@@ -76,6 +76,8 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+
+        print(request.data)
         
         if instance:
             serializer = self.get_serializer(

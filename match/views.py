@@ -49,7 +49,31 @@ class MatchViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def update(self, request, *args, **kwargs):
+        # Extract match_id from request.data
+        match_id = request.data.get('id')
+        
+        # Retrieve the instance to be updated using match_id
+        try:
+            instance = Match.objects.get(pk=match_id)
+        except Match.DoesNotExist:
+            return Response({'detail': 'Match not found'}, status=status.HTTP_404_NOT_FOUND)
 
+        # Update the instance with the rest of the information from request.data
+        instance.status = request.data.get('status', instance.status)
+        instance.stadium_id = request.data.get('stadium', instance.stadium_id)
+        instance.referee_head_id = request.data.get('refereeHead', instance.referee_head_id)
+        instance.referee_assistant_id = request.data.get('refereeAssistant1', instance.referee_assistant_id)
+        instance.referee_assistant_2_id = request.data.get('refereeAssistant2', instance.referee_assistant_2_id)
+        instance.referee_assistant_3_id = request.data.get('refereeAssistant3', instance.referee_assistant_3_id)
+        instance.jersey_color_A = request.data.get('jersey_color_A', instance.jersey_color_A)
+        instance.jersey_color_B = request.data.get('jersey_color_B', instance.jersey_color_B)
+
+        # Save the updated instance
+        instance.save()
+
+        return Response({'detail': 'Match updated successfully'}, status=status.HTTP_200_OK)
+    
 class MatchSubstituteRecordViewSet(viewsets.ModelViewSet):
     queryset = MatchSubstituteRecord.objects.all()
     serializer_class = MatchSubstituteRecordSerializer
