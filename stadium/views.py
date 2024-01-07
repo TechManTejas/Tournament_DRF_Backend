@@ -24,3 +24,12 @@ class StadiumViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(club=self.request.user.club)
+
+class StadiumAllViewSet(viewsets.ModelViewSet):
+    queryset = Stadium.objects.all()
+    serializer_class = StadiumSerializer
+
+    def get_queryset(self):
+        requester_club = self.request.user.club
+        return Stadium.objects.filter(club=requester_club)
+

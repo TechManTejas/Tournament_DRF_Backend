@@ -1,6 +1,6 @@
 from django.db import models
 from club.models import Club
-from group.models import Group
+from group.models import Group, GroupTeam
 from round.models import Round
 from team.models import TeamRecord
 from tournament.models import Tournament
@@ -11,48 +11,46 @@ from django.utils import timezone
 
 
 class Match(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
-    round = models.ForeignKey(Round, on_delete=models.CASCADE, null=True)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
-    teamA = models.ForeignKey(
-        TeamRecord, on_delete=models.CASCADE, related_name="teamA_matches"
-    )
-    teamB = models.ForeignKey(
-        TeamRecord, on_delete=models.CASCADE, related_name="teamB_matches"
-    )
-    jersey_color_A = models.CharField(max_length=50)
-    jersey_color_B = models.CharField(max_length=50)
-    best_goalkeeper = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="best_goalkeeper_matches"
-    )
+    teamA = models.ForeignKey(GroupTeam, on_delete=models.CASCADE, related_name="teamA")
+    teamB = models.ForeignKey(GroupTeam, on_delete=models.CASCADE, related_name="teamB")
 
-    best_goalscorer = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="best_goalscorer_matches"
-    )
-    datetime = models.DateTimeField()
+    jersey_color_A = models.CharField(max_length=50, blank=True)
+    jersey_color_B = models.CharField(max_length=50, blank=True)
+
+    stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE, null=True, blank=True)
+
     referee_head = models.ForeignKey(
-        Referee, on_delete=models.CASCADE, related_name="head_referee_matches"
+        Referee, 
+        on_delete=models.CASCADE, 
+        related_name="head_referee_matches", 
+        null=True, 
+        blank=True
     )
     referee_assistant = models.ForeignKey(
         Referee,
         on_delete=models.CASCADE,
         related_name="assistant_referee_matches",
         null=True,
+        blank=True,
     )
     referee_assistant_2 = models.ForeignKey(
         Referee,
         on_delete=models.CASCADE,
         related_name="assistant_referee_2_matches",
         null=True,
+        blank=True,
     )
     referee_assistant_3 = models.ForeignKey(
         Referee,
         on_delete=models.CASCADE,
         related_name="assistant_referee_3_matches",
         null=True,
+        blank=True,
     )
-    stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE)
+    
+    start_time = models.TimeField(null=True, blank=True)
+    timer = models.CharField(max_length=4, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
 
     STATUS_CHOICES = [
         ("scheduled", "Scheduled"),
@@ -60,21 +58,16 @@ class Match(models.Model):
         ("completed", "Completed"),
     ]
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="scheduled"
+        max_length=20, choices=STATUS_CHOICES, default="scheduled", blank=True
     )
 
-    start_time = models.TimeField()
-    timer = models.CharField(
-        max_length=4
-    )  # Assuming it's a char field, adjust accordingly
-    end_time = models.TimeField()
+    id = models.CharField(primary_key=True, max_length=255)
 
     def __str__(self):
-        return f"{self.teamA} vs {self.teamB} - {self.tournament}"
+        return f"{self.teamA} vs {self.teamB}"
 
 
 class MatchSubstituteRecord(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player_in = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="substitute_records_in")
     player_out = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="substitute_records_out")
@@ -86,7 +79,6 @@ class MatchSubstituteRecord(models.Model):
 
 
 class MatchCardRecord(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player = models.ForeignKey(
         Player, on_delete=models.CASCADE, related_name="card_records"
@@ -108,11 +100,8 @@ class MatchCardRecord(models.Model):
 
 
 class MatchGoalRecord(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    player = models.ForeignKey(
-        Player, on_delete=models.CASCADE, related_name="goal_records"
-    )
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="goal_records")
     goal_minute = models.PositiveIntegerField()
     is_penalty_goal = models.BooleanField(default=False)
     is_own_goal = models.BooleanField(default=False)
@@ -123,7 +112,6 @@ class MatchGoalRecord(models.Model):
 
 
 class MatchComment(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     comment_minute = models.PositiveIntegerField()
     comment = models.TextField()

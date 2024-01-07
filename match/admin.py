@@ -3,9 +3,9 @@ from .models import Match, MatchCardRecord, MatchComment, MatchGoalRecord, Match
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('teamA', 'teamB', 'tournament', 'datetime', 'status')
-    list_filter = ('tournament', 'status')
-    search_fields = ('teamA__name', 'teamB__name', 'tournament__name', 'datetime')
+    list_display = ('teamA', 'teamB', 'status')
+    list_filter = ('status',)
+    search_fields = ('teamA__name', 'teamB__name')
 
 @admin.register(MatchSubstituteRecord)
 class MatchSubstituteRecordAdmin(admin.ModelAdmin):

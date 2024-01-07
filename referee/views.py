@@ -27,3 +27,12 @@ class RefereeModelViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         requester_club = self.request.user.club
         serializer.save(club=requester_club)
+
+class RefereeAllModelViewSet(viewsets.ModelViewSet):
+    queryset = Referee.objects.all()
+    serializer_class = RefereeSerializer
+
+    def get_queryset(self):
+        requester_club = self.request.user.club
+        return Referee.objects.filter(club=requester_club)
+

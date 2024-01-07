@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from club.serializers import ClubSerializer
-from group.serializers import GroupSerializer
+from group.serializers import GroupSerializer, GroupTeamSerializer
 from player.serializers import PlayerSerializer
 from referee.serializers import RefereeSerializer
 from round.serializers import RoundSerializer
@@ -17,19 +17,13 @@ from .models import (
 
 
 class MatchSerializer(serializers.ModelSerializer):
-    club = ClubSerializer(read_only=True)
-    group = GroupSerializer(read_only=True)
-    round = RoundSerializer(read_only=True)
-    tournament = TournamentSerializer(read_only=True)
-    teamA = TeamRecordSerializer(read_only=True)
-    teamB = TeamRecordSerializer(read_only=True)
+    teamA = GroupTeamSerializer(read_only=True)
+    teamB = GroupTeamSerializer(read_only=True)
     referee_head = RefereeSerializer(read_only=True)
     referee_assistant = RefereeSerializer(read_only=True)
     referee_assistant_2 = RefereeSerializer(read_only=True)
     referee_assistant_3 = RefereeSerializer(read_only=True)
     stadium = StadiumSerializer(read_only=True)
-    best_goalkeeper = PlayerSerializer(read_only=True)
-    best_goalscorer = PlayerSerializer(read_only=True)
 
     class Meta:
         model = Match
