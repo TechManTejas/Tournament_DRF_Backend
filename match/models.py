@@ -62,9 +62,10 @@ class Match(models.Model):
 
 class MatchSubstituteRecord(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    group_team_record = models.ForeignKey(GroupTeam, on_delete=models.CASCADE, null=True, blank=True)
     player_in = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="substitute_records_in")
     player_out = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="substitute_records_out")
-    minute = models.PositiveIntegerField()
+    minute = models.CharField(max_length=255,null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -73,6 +74,7 @@ class MatchSubstituteRecord(models.Model):
 
 class MatchCardRecord(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    group_team_record = models.ForeignKey(GroupTeam, on_delete=models.CASCADE, null=True, blank=True)
     player = models.ForeignKey(
         Player, on_delete=models.CASCADE, related_name="card_records"
     )
@@ -84,7 +86,7 @@ class MatchCardRecord(models.Model):
     ]
     card_type = models.CharField(max_length=6, choices=CARD_TYPE_CHOICES)
 
-    penalty_time = models.PositiveIntegerField(blank=True, null=True)
+    penalty_time = models.CharField(max_length=255,null=True, blank=True)
     minute = models.PositiveIntegerField()
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -94,10 +96,12 @@ class MatchCardRecord(models.Model):
 
 class MatchGoalRecord(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="goal_records")
-    goal_minute = models.PositiveIntegerField()
-    is_penalty_goal = models.BooleanField(default=False)
+    group_team_record = models.ForeignKey(GroupTeam, on_delete=models.CASCADE, null=True, blank=True)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="goal_records", null=True, blank=True)
+    goal_minute = models.CharField(max_length=255,null=True, blank=True)
+    is_standard_goal = models.BooleanField(default=False)
     is_own_goal = models.BooleanField(default=False)
+    is_penalty_goal = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -106,7 +110,7 @@ class MatchGoalRecord(models.Model):
 
 class MatchComment(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    comment_minute = models.PositiveIntegerField()
+    comment_minute = models.CharField(max_length=255,null=True, blank=True)
     comment = models.TextField()
 
     COMMENT_TYPE_CHOICES = [

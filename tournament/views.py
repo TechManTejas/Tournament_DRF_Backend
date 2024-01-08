@@ -42,7 +42,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
             raise serializer.ValidationError("Invalid game_mode_id")
 
         # Save the tournament with the associated club and game_mode
-        serializer.save(club=requester_club, game_mode=game_mode)
+        serializer.save(club=requester_club, game_mode=game_mode, data=game_mode.data)
 
         # Create rounds, groups, and schedules based on the game mode data
         self.create_rounds_groups_schedules(serializer.instance, game_mode.data)

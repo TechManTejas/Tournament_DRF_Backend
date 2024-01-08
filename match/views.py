@@ -1,6 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.db.models import F
+
+from group.models import GroupTeam
 from .models import (
     Match,
     MatchCardRecord,
@@ -87,6 +89,49 @@ class MatchCardRecordViewSet(viewsets.ModelViewSet):
 class MatchGoalRecordViewSet(viewsets.ModelViewSet):
     queryset = MatchGoalRecord.objects.all()
     serializer_class = MatchGoalRecordSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            # Extract data from the request
+            match_id = request.data.get('match')
+            group_team_record_id = request.data.get('group_team_record') 
+            other_group_team_record_id = request.data.get('other_group_team_record')
+            player_id = request.data.get('player')
+            is_standard_goal = request.data.get('is_standard_goal', False)
+            is_penalty_goal = request.data.get('is_penalty_goal', False)
+            is_own_goal = request.data.get('is_own_goal', False)
+
+            # Create the MatchGoalRecord object
+            goal_record = MatchGoalRecord.objects.create(
+                match_id=match_id,
+                group_team_record_id=group_team_record_id,
+                player_id=player_id,
+                is_standard_goal=is_standard_goal,
+                is_penalty_goal=is_penalty_goal,
+                is_own_goal=is_own_goal
+            )
+
+            # Get the corresponding GroupTeam object
+            group_team = GroupTeam.objects.get(id=group_team_record_id)
+            other_group_team = GroupTeam.objects.get(id=other_group_team_record_id)
+
+            # Increment goals_pos if the goal was standard or penalty
+            if is_standard_goal or is_penalty_goal:
+                GroupTeam.objects.filter(id=group_team.id).update(goals_pos=F('goals_pos') + 1)
+                GroupTeam.objects.filter(id=other_group_team.id).update(goals_neg=F('goals_neg') + 1)
+
+            # If it's an own goal, increment goals_pos of the other_group_team
+            elif is_own_goal:
+                GroupTeam.objects.filter(id=other_group_team.id).update(goals_pos=F('goals_pos') + 1)
+                GroupTeam.objects.filter(id=group_team.id).update(goals_neg=F('goals_neg') + 1)
+
+            # Serialize the created object
+            serializer = self.get_serializer(goal_record)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MatchCommentViewSet(viewsets.ModelViewSet):

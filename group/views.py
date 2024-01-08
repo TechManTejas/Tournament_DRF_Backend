@@ -13,6 +13,21 @@ class GroupTeamViewSet(viewsets.ModelViewSet):
     queryset = GroupTeam.objects.all()
     serializer_class = GroupTeamSerializer
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # Get the points from the payload
+        points_to_increment = request.data.get('points', 0)
+
+        # Increment the points
+        instance.points += points_to_increment
+        instance.save()
+
+        return Response(serializer.data)
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
