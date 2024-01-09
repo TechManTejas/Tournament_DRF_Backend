@@ -266,17 +266,27 @@ class CardsCardConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+
         x = data.get("x")
         y = data.get("y")
         is_live = data.get("isLive")
+        component_data = data.get("data")
+
 
         if is_live is not None:
+            # Handle live status message
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "send_live_status", "isLive": is_live}
             )
-        elif x is not None and y is not None:
+        if x is not None and y is not None:
+            # Handle drag event
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "send_location", "x": x, "y": y}
+            )
+        if component_data is not None:
+            # Handle data transfer event
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_data", "data": component_data}
             )
 
     async def send_location(self, event):
@@ -287,6 +297,11 @@ class CardsCardConsumer(AsyncWebsocketConsumer):
     async def send_live_status(self, event):
         is_live = event["isLive"]
         await self.send(text_data=json.dumps({"isLive": is_live}))
+
+    async def send_data(self, data):
+        print(data)
+        # Handle the additional data as needed
+        await self.send(text_data=json.dumps({"data": data}))
 
 
 class FreeTextCardConsumer(AsyncWebsocketConsumer):
@@ -382,5 +397,54 @@ class SwapsCardConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({"isLive": is_live}))
 
     async def send_data(self, data):
+        # Handle the additional data as needed
+        await self.send(text_data=json.dumps({"data": data}))
+
+class TimeCardConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_name = self.scope["url_route"]["kwargs"]["match_id"]
+        self.room_group_name = f"timecard_{self.room_name}"
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+
+        x = data.get("x")
+        y = data.get("y")
+        is_live = data.get("isLive")
+        component_data = data.get("data")
+
+
+        if is_live is not None:
+            # Handle live status message
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_live_status", "isLive": is_live}
+            )
+        if x is not None and y is not None:
+            # Handle drag event
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_location", "x": x, "y": y}
+            )
+        if component_data is not None:
+            # Handle data transfer event
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_data", "data": component_data}
+            )
+
+    async def send_location(self, event):
+        x = event["x"]
+        y = event["y"]
+        await self.send(text_data=json.dumps({"x": x, "y": y}))
+
+    async def send_live_status(self, event):
+        is_live = event["isLive"]
+        await self.send(text_data=json.dumps({"isLive": is_live}))
+
+    async def send_data(self, data):
+        print(data)
         # Handle the additional data as needed
         await self.send(text_data=json.dumps({"data": data}))

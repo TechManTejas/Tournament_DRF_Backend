@@ -79,15 +79,9 @@ class MatchCardRecord(models.Model):
         Player, on_delete=models.CASCADE, related_name="card_records"
     )
 
-    CARD_TYPE_CHOICES = [
-        ("red", "Red"),
-        ("yellow", "Yellow"),
-        ("time", "Time"),
-    ]
-    card_type = models.CharField(max_length=6, choices=CARD_TYPE_CHOICES)
-
-    penalty_time = models.CharField(max_length=255,null=True, blank=True)
+    card_type = models.CharField(max_length=255, null=True, blank=True)
     minute = models.PositiveIntegerField()
+    penalty_time = models.CharField(max_length=255,null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

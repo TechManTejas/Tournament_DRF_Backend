@@ -80,10 +80,42 @@ class MatchSubstituteRecordViewSet(viewsets.ModelViewSet):
     queryset = MatchSubstituteRecord.objects.all()
     serializer_class = MatchSubstituteRecordSerializer
 
-
 class MatchCardRecordViewSet(viewsets.ModelViewSet):
     queryset = MatchCardRecord.objects.all()
     serializer_class = MatchCardRecordSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        print(request.data)
+
+        try:
+            # Extract data from the request
+            match_id = request.data.get('match')
+            group_team_record_id = request.data.get('group_team_record')
+            player_id = request.data.get('player')
+            card_type = request.data.get('card_type')
+            penalty_time = request.data.get('penalty_time', None)
+            minute = request.data.get('minute')
+
+            # Create the MatchCardRecord object
+            card_record = MatchCardRecord.objects.create(
+                match_id=match_id,
+                group_team_record_id=group_team_record_id,
+                player_id=player_id,
+                card_type=card_type,
+                penalty_time=penalty_time,
+                minute=minute
+            )
+
+            # Serialize the created object
+            serializer = self.get_serializer(card_record)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class MatchGoalRecordViewSet(viewsets.ModelViewSet):

@@ -44,6 +44,7 @@ class MatchCardRecordSerializer(serializers.ModelSerializer):
     club = ClubSerializer(read_only=True)
     match = MatchSerializer(read_only=True)
     player = PlayerSerializer(read_only=True)
+    group_team_record = GroupTeamSerializer(read_only=True)
     class Meta:
         model = MatchCardRecord
         fields = "__all__"
