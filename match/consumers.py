@@ -1,4 +1,5 @@
 import json
+import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
@@ -22,7 +23,7 @@ class ScoreCardConsumer(AsyncWebsocketConsumer):
         y = data.get("y")
         is_live = data.get("isLive")
         component_data = data.get("data")
-
+        time_value = data.get("time")
 
         if is_live is not None:
             # Handle live status message
@@ -38,6 +39,11 @@ class ScoreCardConsumer(AsyncWebsocketConsumer):
             # Handle data transfer event
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "send_data", "data": component_data}
+            )
+
+        if time_value:
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_time", "time_value": time_value}
             )
 
     async def send_location(self, event):
@@ -57,6 +63,12 @@ class ScoreCardConsumer(AsyncWebsocketConsumer):
         print(data)
         # Handle the additional data as needed
         await self.send(text_data=json.dumps({"data": data}))
+
+    async def send_time(self, time_value):
+        print(time_value)
+        # Handle the additional data as needed
+        await self.send(text_data=json.dumps({"time": time_value}))
+
 
 class MatchCardConsumer(AsyncWebsocketConsumer):
     async def connect(self):
