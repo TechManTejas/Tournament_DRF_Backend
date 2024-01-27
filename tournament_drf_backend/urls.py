@@ -19,7 +19,7 @@ from match import views as match_substitute_record_views
 from match import views as match_card_record_views
 from match import views as match_goal_record_views
 from match import views as match_comment_views
-from chat.views import ChatSupportViewSet, ChatClubViewSet  # Add these lines
+from chat.views import ChatSupportViewSet, ChatClubViewSet 
 
 router = DefaultRouter()
 router.register('user-register', user_views.UserRegisterModelViewSet, basename='user-register')
