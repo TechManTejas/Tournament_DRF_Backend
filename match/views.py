@@ -115,9 +115,6 @@ class MatchCardRecordViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
 class MatchGoalRecordViewSet(viewsets.ModelViewSet):
     queryset = MatchGoalRecord.objects.all()
     serializer_class = MatchGoalRecordSerializer
@@ -165,6 +162,27 @@ class MatchGoalRecordViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            
+            # Extract the new_player and goal_minute from the request data
+            new_player = request.data.get('player')
+            goal_minute = request.data.get('goal_minute')
+
+            # Update the instance with the new data
+            instance.player_id = new_player
+            instance.goal_minute = goal_minute
+            instance.save()
+
+            # Serialize the updated object
+            serializer = self.get_serializer(instance)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class MatchCommentViewSet(viewsets.ModelViewSet):
     queryset = MatchComment.objects.all()
